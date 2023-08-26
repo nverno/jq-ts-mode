@@ -4,7 +4,8 @@
 
 ;; Author: Noah Peart <noah.v.peart@gmail.com>
 ;; URL: https://github.com/nverno/jq-ts-mode
-;; Package-Requires: ((emacs "29"))
+;; Version: 1.0.0
+;; Package-Requires: ((emacs "29.1"))
 ;; Created: 26 August 2023
 ;; Keywords: jq languages tree-sitter
 
@@ -26,6 +27,18 @@
 ;; Floor, Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
+;;
+;; This package defines `jq-ts-mode', a tree-sitter backed major mode for
+;; editing Jq source files. It provides font-lock, imenu, indentation, and
+;; navigation.
+;;
+;; The tree-sitter Jq grammar compatible with this package can be found at
+;; https://github.com/nverno/tree-sitter-jq. The grammar can be installed
+;; with `treesit-install-language-grammar' after adding
+;;
+;;    '(jq "https://github.com/nverno/tree-sitter-jq" nil nil nil)
+;;
+;; to `treesit-language-source-alist'.
 ;;
 ;;; Code:
 
@@ -204,7 +217,7 @@ For OVERRIDE, START, END, see `treesit-font-lock-rules'."
 
 ;;; Indentation
 
-(defun jq-ts-mode--indent-pipeline (node parent _bol)
+(defun jq-ts-mode--indent-pipeline (_node parent _bol)
   "Determine indentation for nodes in pipelines.
 When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
   (when jq-ts-mode-align-pipelines
