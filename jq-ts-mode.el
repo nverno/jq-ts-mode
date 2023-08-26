@@ -211,7 +211,12 @@ For OVERRIDE, START, END, see `treesit-font-lock-rules'."
    :feature 'variable
    '((variable) @font-lock-variable-name-face
      (import_statement
-      name: (_) @font-lock-variable-name-face)))
+      name: (_) @font-lock-variable-name-face))
+
+   :language 'jq
+   :feature 'error
+   :override t
+   '((ERROR) @font-lock-warning-face))
   "Tree-sitter font-lock settings.")
 
 
@@ -379,7 +384,7 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
                   ( builtin-variable builtin-function
                     assignment constant number delimiter
                     escape-sequence interpolation property)
-                  ( bracket operator function)))
+                  ( bracket operator function error)))
     
     ;; Imenu
     (setq-local treesit-simple-imenu-settings
