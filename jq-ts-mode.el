@@ -52,7 +52,7 @@
 
 (defcustom jq-ts-mode-align-pipelines t
   "When non-nil, indent \"|\" to same level in pipelines."
-  :type 'booleanp
+  :type 'boolean
   :safe 'booleanp
   :group 'jq)
 
