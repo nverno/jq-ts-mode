@@ -70,37 +70,35 @@
   "Jq operators for tree-sitter font-locking.")
 
 (defconst jq-ts-mode--builtin-variables
-  (rx string-start (or "$__loc__" "$ARGS" "$ENV") string-end)
+  '("$__loc__" "$ARGS" "$ENV")
   "Jq builtin variables for tree-sitter font-locking.")
 
 (defconst jq-ts-mode--builtin-functions
-  (rx string-start
-      (or "acos" "acosh" "add" "all" "any" "arrays" "ascii_downcase" "ascii_upcase"
-          "asin" "asinh" "atan" "atan2" "atanh" "booleans" "bsearch" "builtins"
-          "capture" "cbrt" "ceil" "combinations" "contains" "copysign" "cos" "cosh"
-          "debug" "del" "delpaths" "drem" "empty" "endswith" "env" "erf" "erfc" "error"
-          "exp" "exp10" "exp2" "explode" "expm1" "fabs" "fdim" "finites" "first"
-          "flatten" "floor" "fma" "fmax" "fmin" "fmod" "format" "frexp" "from_entries"
-          "fromdate" "fromdateiso8601" "fromjson" "fromstream" "gamma" "get_jq_origin"
-          "get_prog_origin" "get_search_list" "getpath" "gmtime" "group_by"
-          "gsub" "halt" "halt_error" "has" "hypot" "implode" "IN" "in" "INDEX"
-          "index" "indices" "infinite" "input" "input_filename" "input_line_number"
-          "inputs" "inside" "isempty" "isfinite" "isinfinite" "isnan"
-          "isnormal" "iterables" "j0" "j1" "jn" "JOIN" "join" "keys" "keys_unsorted"
-          "last" "ldexp" "leaf_paths" "length" "lgamma" "lgamma_r" "limit"
-          "localtime" "log" "log10" "log1p" "log2" "logb" "ltrimstr" "map" "map_values"
-          "match" "max" "max_by" "min" "min_by" "mktime" "modf" "modulemeta"
-          "nan" "nearbyint" "nextafter" "nexttoward" "normals" "not" "now" "nth"
-          "nulls" "numbers" "objects" "path" "paths" "pow" "pow10" "range" "recurse"
-          "recurse_down" "remainder" "repeat" "reverse" "rindex" "rint" "round"
-          "rtrimstr" "scalars" "scalb" "scalbln" "scan" "select"
-          "setpath" "significand" "sin" "sinh" "sort" "sort_by" "split" "splits"
-          "sqrt" "startswith" "stderr" "strflocaltime" "strftime" "strings" "strptime"
-          "sub" "tan" "tanh" "test" "tgamma" "to_entries" "todate" "todateiso8601"
-          "tojson" "tonumber" "tostream" "tostring" "transpose" "trunc" "truncate_stream"
-          "type" "unique" "unique_by" "until" "utf8bytelength" "values"
-          "walk" "while" "with_entries" "y0" "y1" "yn")
-      string-end)
+  '("acos" "acosh" "add" "all" "any" "arrays" "ascii_downcase" "ascii_upcase"
+    "asin" "asinh" "atan" "atan2" "atanh" "booleans" "bsearch" "builtins"
+    "capture" "cbrt" "ceil" "combinations" "contains" "copysign" "cos" "cosh"
+    "debug" "del" "delpaths" "drem" "empty" "endswith" "env" "erf" "erfc" "error"
+    "exp" "exp10" "exp2" "explode" "expm1" "fabs" "fdim" "finites" "first"
+    "flatten" "floor" "fma" "fmax" "fmin" "fmod" "format" "frexp" "from_entries"
+    "fromdate" "fromdateiso8601" "fromjson" "fromstream" "gamma" "get_jq_origin"
+    "get_prog_origin" "get_search_list" "getpath" "gmtime" "group_by"
+    "gsub" "halt" "halt_error" "has" "hypot" "implode" "IN" "in" "INDEX"
+    "index" "indices" "infinite" "input" "input_filename" "input_line_number"
+    "inputs" "inside" "isempty" "isfinite" "isinfinite" "isnan"
+    "isnormal" "iterables" "j0" "j1" "jn" "JOIN" "join" "keys" "keys_unsorted"
+    "last" "ldexp" "leaf_paths" "length" "lgamma" "lgamma_r" "limit"
+    "localtime" "log" "log10" "log1p" "log2" "logb" "ltrimstr" "map" "map_values"
+    "match" "max" "max_by" "min" "min_by" "mktime" "modf" "modulemeta"
+    "nan" "nearbyint" "nextafter" "nexttoward" "normals" "not" "now" "nth"
+    "nulls" "numbers" "objects" "path" "paths" "pow" "pow10" "range" "recurse"
+    "recurse_down" "remainder" "repeat" "reverse" "rindex" "rint" "round"
+    "rtrimstr" "scalars" "scalb" "scalbln" "scan" "select"
+    "setpath" "significand" "sin" "sinh" "sort" "sort_by" "split" "splits"
+    "sqrt" "startswith" "stderr" "strflocaltime" "strftime" "strings" "strptime"
+    "sub" "tan" "tanh" "test" "tgamma" "to_entries" "todate" "todateiso8601"
+    "tojson" "tonumber" "tostream" "tostring" "transpose" "trunc" "truncate_stream"
+    "type" "unique" "unique_by" "until" "utf8bytelength" "values"
+    "walk" "while" "with_entries" "y0" "y1" "yn")
   "Jq builtin functions for tree-sitter font-locking.")
 
 ;;; Font-locking
@@ -143,12 +141,18 @@ For OVERRIDE, START, END, see `treesit-font-lock-rules'."
    :language 'jq
    :feature 'builtin-function
    `((format) @font-lock-builtin-face
-     ((identifier) @var (:match ,jq-ts-mode--builtin-functions @var))
+     ((identifier) @var
+      (:match ,(rx-to-string
+                `(seq bos (or ,@jq-ts-mode--builtin-functions) eos))
+              @var))
      @font-lock-builtin-face)
 
    :language 'jq
    :feature 'builtin-variable
-   `(((variable) @var (:match ,jq-ts-mode--builtin-variables @var))
+   `(((variable) @var
+      (:match ,(rx-to-string
+                `(seq bos (or ,@jq-ts-mode--builtin-variables) eos))
+              @var))
      @font-lock-builtin-face)
 
    :language 'jq
@@ -233,11 +237,9 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
     (back-to-indentation)
     (point)))
 
-;; (MATCHER ANCHOR OFFSET)
 (defvar jq-ts-mode--indent-rules
   `((jq
      ((parent-is "program") parent-bol 0)
-     ;; ((query "(ERROR (ERROR)) @indent") column-0 0)
      ((node-is "}") parent-bol 0)
      ((node-is ")") parent-bol 0)
      ((node-is "]") parent-bol 0)
@@ -321,42 +323,32 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
     (modify-syntax-entry ?|  "." table)
     (modify-syntax-entry ?*  "." table)
     (modify-syntax-entry ?/  "." table)
+    (modify-syntax-entry ?$  "'" table)
     table)
   "Syntax table for `jq-ts-mode'.")
 
 ;;; Navigation
 
-(defvar jq-ts-mode--treesit-sentence-nodes
-  '("module"
-    "import_statement"
-    "include_statement"
-    "if_expression"
-    "try_expression"
-    "binding_expression"
-    "reduce_expression"
-    "foreach_expression"
-    "label_expression"
-    "break_expression")
-  "Nodes that designate sentences in Jq.")
+(defvar jq-ts-mode--sentence-nodes
+  (rx (or "module"
+          "function"
+          "import_statement"
+          "include_statement"
+          "if_expression"
+          "try_expression"
+          "binding_expression"
+          "reduce_expression"
+          "foreach_expression"
+          "label_expression"
+          "break_expression"))
+  "See `treesit-sentence-type-regexp' for more information.")
 
-(defvar jq-ts-mode--treesit-sexp-nodes
-  '("expression"
-    "pattern"
-    "array"
-    "object"
-    "string"
-    "number"
-    "identifier"
-    "variable"
-    "dot"
-    "recurse"
-    "true"
-    "false"
-    "null"
-    "argument_list"
-    "parameter_list"
-    "pair")
-  "Nodes that designate sexps in Jq.")
+(defvar jq-ts-mode--sexp-nodes nil
+  "See `treesit-sexp-type-regexp' for more information.")
+
+(defvar jq-ts-mode--text-nodes
+  (rx (or "comment" "string_content"))
+  "See `treesit-text-type-regexp' for more information.")
 
 
 ;;;###autoload
@@ -369,10 +361,11 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
   (when (treesit-ready-p 'jq)
     (treesit-parser-create 'jq)
 
-    (setq-local comment-start "# ")
+    (setq-local comment-start "#")
     (setq-local comment-end "")
     (setq-local comment-start-skip (rx "#" (* (syntax whitespace))))
-        
+    (setq-local parse-sexp-ignore-comments t)
+    
     ;; Indentation
     (setq-local treesit-simple-indent-rules jq-ts-mode--indent-rules)
 
@@ -393,14 +386,15 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
                    jq-ts-mode--variable-imenu-p nil )))
 
     ;; Navigation
-    (setq-local treesit-defun-type-regexp
-                (rx string-start (or "function_definition") string-end))
+    (setq-local treesit-defun-tactic 'top-level)
     (setq-local treesit-defun-name-function #'jq-ts-mode--defun-name)
-    (setq-local treesit-text-type-regexp (regexp-opt '("comment" "string_content")))
-    (setq-local treesit-sentence-type-regexp
-                (regexp-opt jq-ts-mode--treesit-sentence-nodes))
-    (setq-local treesit-sexp-type-regexp (regexp-opt jq-ts-mode--treesit-sexp-nodes))
-    (setq-local treesit-defun-prefer-top-level t)
+    (setq-local treesit-defun-type-regexp (rx bos "function_definition" eos))
+
+    (setq-local treesit-thing-settings
+                `((jq
+                   (sexp ,jq-ts-mode--sexp-nodes)
+                   (sentence ,jq-ts-mode--sentence-nodes)
+                   (text ,jq-ts-mode--text-nodes))))
     
     (treesit-major-mode-setup)))
 
