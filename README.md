@@ -5,6 +5,11 @@
 This package is compatible with and was tested against the tree-sitter grammar
 for Jq found at https://github.com/nverno/tree-sitter-jq. 
 
+It provides indentation, font-locking, imenu, and navigation support for Jq
+buffers.
+
+![example](doc/example.png)
+
 For a major-mode without tree-sitter see https://github.com/ljos/jq-mode.
 
 ## Installing
