@@ -386,7 +386,7 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
                    jq-ts-mode--variable-imenu-p nil )))
 
     ;; Navigation
-    (setq-local treesit-defun-tactic 'top-level)
+    (setq-local treesit-defun-tactic 'nested)
     (setq-local treesit-defun-name-function #'jq-ts-mode--defun-name)
     (setq-local treesit-defun-type-regexp (rx bos "function_definition" eos))
 
