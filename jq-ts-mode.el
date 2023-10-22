@@ -1,7 +1,5 @@
 ;;; jq-ts-mode.el --- Tree-sitter support for jq buffers -*- lexical-binding: t; -*-
 
-;; This is free and unencumbered software released into the public domain.
-
 ;; Author: Noah Peart <noah.v.peart@gmail.com>
 ;; URL: https://github.com/nverno/jq-ts-mode
 ;; Version: 1.0.0
