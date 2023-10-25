@@ -329,6 +329,7 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
 
 (defvar jq-ts-mode--sentence-nodes
   (rx (or "module"
+          "pipeline"
           "function"
           "import_statement"
           "include_statement"
