@@ -217,7 +217,6 @@ For OVERRIDE, START, END, see `treesit-font-lock-rules'."
 
    :language 'jq
    :feature 'error
-   :override t
    '((ERROR) @font-lock-warning-face))
   "Tree-sitter font-lock settings.")
 
