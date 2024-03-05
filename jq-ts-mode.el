@@ -131,7 +131,7 @@ For OVERRIDE, START, END, see `treesit-font-lock-rules'."
    :language 'jq
    :feature 'constant
    '([(true) (false) (null)] @font-lock-constant-face)
-   
+
    :language 'jq
    :feature 'number
    '((number) @font-lock-number-face)
@@ -156,11 +156,11 @@ For OVERRIDE, START, END, see `treesit-font-lock-rules'."
    :language 'jq
    :feature 'operator
    `([,@jq-ts-mode--operators] @font-lock-operator-face)
-   
+
    :language 'jq
    :feature 'bracket
    '((["(" ")" "[" "]" "{" "}"]) @font-lock-bracket-face)
-   
+
    :language 'jq
    :feature 'delimiter
    '((["," ";" ":"]) @font-lock-delimiter-face)
@@ -179,7 +179,7 @@ For OVERRIDE, START, END, see `treesit-font-lock-rules'."
    :feature 'interpolation
    :override t
    '((interpolation ["\\(" ")"] @font-lock-misc-punctuation-face))
-   
+
    :language 'jq
    :feature 'escape-sequence
    :override t
@@ -196,19 +196,19 @@ For OVERRIDE, START, END, see `treesit-font-lock-rules'."
    :feature 'assignment
    '((assignment_expression
       left: (_) @jq-ts-mode--treesit-fontify-assignment-lhs))
-   
+
    :language 'jq
    :feature 'function
    '((call_expression
       function: [(identifier) @font-lock-function-call-face]))
-   
+
    :language 'jq
    :feature 'property
    :override t                          ; override string face on keys
    '((field_id) @font-lock-property-name-face
      (field name: [(string) (identifier)] @font-lock-property-use-face)
      (pair key: [(string) (identifier)] @font-lock-property-use-face))
-   
+
    :language 'jq
    :feature 'variable
    '((variable) @font-lock-variable-name-face
@@ -228,7 +228,8 @@ For OVERRIDE, START, END, see `treesit-font-lock-rules'."
 When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
   (when jq-ts-mode-align-pipelines
     (setq parent (treesit-parent-while
-                  parent (lambda (n) (treesit-node-match-p n "pipeline")))))
+                  parent (lambda (node)
+                           (equal (treesit-node-type node) "pipeline")))))
   (save-excursion
     (goto-char (treesit-node-start parent))
     (back-to-indentation)
@@ -290,7 +291,7 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
   (pcase (treesit-node-type node)
     ("variable"
      (treesit-parent-until
-      node (lambda (n) (treesit-node-match-p n "\\`binding_expression\\'"))))
+      node (lambda (n) (equal (treesit-node-type n) "binding_expression"))))
     (_ nil)))
 
 (defun jq-ts-mode--defun-name (node)
@@ -363,7 +364,7 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
     (setq-local comment-end "")
     (setq-local comment-start-skip (rx "#" (* (syntax whitespace))))
     (setq-local parse-sexp-ignore-comments t)
-    
+
     ;; Indentation
     (setq-local treesit-simple-indent-rules jq-ts-mode--indent-rules)
 
@@ -376,7 +377,7 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
                     assignment constant number delimiter
                     escape-sequence interpolation property)
                   ( bracket operator function error)))
-    
+
     ;; Imenu
     (setq-local treesit-simple-imenu-settings
                 `(("Function" "\\`function_definition\\'" nil nil)
@@ -393,7 +394,7 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
                    (sexp ,jq-ts-mode--sexp-nodes)
                    (sentence ,jq-ts-mode--sentence-nodes)
                    (text ,jq-ts-mode--text-nodes))))
-    
+
     (treesit-major-mode-setup)))
 
 (if (treesit-ready-p 'jq)
