@@ -365,6 +365,11 @@ When `jq-ts-mode-align-pipelines', align NODE with topmost PARENT in pipeline."
     (setq-local comment-start-skip (rx "#" (* (syntax whitespace))))
     (setq-local parse-sexp-ignore-comments t)
 
+    ;; Electric
+    (setq-local electric-layout-rules
+                '((?| . after) (?. . after) (?\[ . after) (?\] . before)))
+    (setq-local electric-indent-chars (append "|.[]()," electric-indent-chars))
+
     ;; Indentation
     (setq-local treesit-simple-indent-rules jq-ts-mode--indent-rules)
 
