@@ -204,10 +204,14 @@ For OVERRIDE, START, END, see `treesit-font-lock-rules'."
 
    :language 'jq
    :feature 'property
-   :override t                          ; override string face on keys
-   '((field_id) @font-lock-property-name-face
-     (field name: [(string) (identifier)] @font-lock-property-use-face)
-     (pair key: [(string) (identifier)] @font-lock-property-use-face))
+   :override t                       ; override string face on keys
+   '((field
+      name: [(field_id) (string) (identifier)] @font-lock-property-use-face)
+     (pair
+      key: [(field_id) (string) (identifier)] @font-lock-property-name-face)
+     (pair_pattern
+      key: (field_id) @font-lock-property-name-face)
+     (object (field_id) @font-lock-property-name-face))
 
    :language 'jq
    :feature 'variable
